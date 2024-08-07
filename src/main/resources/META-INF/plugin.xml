@@ -1,0 +1,36 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>com.pharmcube.xjy.pl_SqlToDsl</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>SqlToDsl</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="yeyu1899@163.com" url="https://www.pharmcube.com/">Pharmcube</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+    This is an SQL to Elasticsearch DSL conversion tool.<br>
+    这是一个SQL转Elasticsearch DSL的工具。<br>
+    これはSQLからElasticsearch DSLへの変換ツールです。<br>
+    이것은 SQL을 Elasticsearch DSL로 변환하는 도구입니다.<br>
+    Dies ist ein Werkzeug zur Umwandlung von SQL in Elasticsearch DSL.<br>
+    Questo è uno strumento di conversione da SQL a Elasticsearch DSL.<br>
+    C'est un outil de conversion de SQL à Elasticsearch DSL.<br>
+  ]]></description>
+
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+<!--        <toolWindow id="SqlToDsl" anchor="right" factoryClass="com.pharmcube.xjy.pl_sqltodsl.SqlToDslRightToolWindow" icon="AllIcons.Actions.Colors"/>-->
+        <toolWindow id="SqlToDsl" anchor="right" factoryClass="com.pharmcube.xjy.pl_sqltodsl.SqlToDslRightToolWindow" icon="com.pharmcube.xjy.pl_sqltodsl.MyIcons.Action"/>
+    </extensions>
+</idea-plugin>
