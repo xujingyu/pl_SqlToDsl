@@ -20,6 +20,12 @@ intellij {
     plugins.set(listOf(/* Plugin Dependencies */))
 }
 
+dependencies {
+    implementation("org.elasticsearch:elasticsearch:7.15.0")
+    implementation("org.elasticsearch.client:x-pack-transport:7.15.0")
+    implementation("com.alibaba:druid:1.1.16")
+}
+
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {

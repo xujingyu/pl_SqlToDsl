@@ -5,10 +5,17 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import com.pharmcube.xjy.es4sql.MainTestSuite;
+import com.pharmcube.xjy.es4sql.SearchDao;
+import com.pharmcube.xjy.es4sql.exception.SqlParseException;
+import com.pharmcube.xjy.es4sql.query.QueryAction;
+import com.pharmcube.xjy.es4sql.query.SqlElasticRequestBuilder;
+import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLFeatureNotSupportedException;
 
 public class SqlToDslRightToolWindow implements ToolWindowFactory {
 
@@ -40,7 +47,21 @@ public class SqlToDslRightToolWindow implements ToolWindowFactory {
 
             convertBtn.addActionListener(e -> {
                 String actionCommand = e.getActionCommand();
-                outputJta.setText("Your sql is" + inputJta.getText());
+                String sql = inputJta.getText();
+                if(StringUtils.isBlank(sql)) {
+                    outputJta.setText("Please enter your sql.");
+                }
+                SearchDao searchDao = MainTestSuite.getSearchDao();
+                try {
+                    QueryAction queryAction = searchDao.explain(sql);
+                    SqlElasticRequestBuilder requestBuilder = queryAction.explain();
+                    outputJta.setText(requestBuilder.explain());
+                } catch (SqlParseException ex) {
+                    throw new RuntimeException(ex);
+                } catch (SQLFeatureNotSupportedException ex) {
+                    throw new RuntimeException(ex);
+                }
+
             });
         }
 //        {
