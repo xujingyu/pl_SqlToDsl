@@ -1,77 +1,45 @@
 package com.pharmcube.xjy.pl_sqltodsl;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
-import com.pharmcube.xjy.es4sql.MainTestSuite;
-import com.pharmcube.xjy.es4sql.SearchDao;
-import com.pharmcube.xjy.es4sql.exception.SqlParseException;
-import com.pharmcube.xjy.es4sql.query.QueryAction;
-import com.pharmcube.xjy.es4sql.query.SqlElasticRequestBuilder;
-import org.apache.commons.lang.StringUtils;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.ui.JBSplitter;
+import com.pharmcube.xjy.ui.ConvertForm01;
 
 import javax.swing.*;
-import java.awt.*;
-import java.sql.SQLFeatureNotSupportedException;
 
-public class SqlToDslRightToolWindow implements ToolWindowFactory {
+public class SqlToDslRightToolWindow extends SimpleToolWindowPanel {
 
-    @Override
-    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        final ContentFactory factory = ContentFactory.SERVICE.getInstance();
-        {
-            JPanel panel = new JPanel();
-            JLabel label = new JLabel("SQL convert to Elasticsearch DSL");
-            label.setFont(new Font("微软雅黑", Font.BOLD, 20));
-            panel.add(label);
+    private final Project project;
+    private final ToolWindow toolWindow;
 
-            JTextArea inputJta = new JTextArea(15,30);
-            inputJta.setToolTipText("Please enter your sql.");
-//            inputJta.setText("Please enter your sql.");
-            inputJta.setFont(new Font("微软雅黑", Font.PLAIN, 15));
-            panel.add(inputJta);
+    public SqlToDslRightToolWindow(Project project, ToolWindow toolWindow) {
+        super(false, false);
+        this.project = project;
+        this.toolWindow = toolWindow;
+        initUI();
+    }
 
-            JButton convertBtn = new JButton("Convert");
-            panel.add(convertBtn);
+    private void initUI() {
+//        //创建一个左右分割的面板
+//        JBSplitter jbSplitter = new JBSplitter(false);
+//        //设置它的唯一标识
+//        jbSplitter.setSplitterProportionKey("main.splitter.key");
+//        //创建一个左侧面板
+//        HttpRunnerLeftPanel leftPanel = new HttpRunnerLeftPanel(project, toolWindow);
+//        jbSplitter.setFirstComponent(leftPanel.getContainer());
+//        //创建一个右侧面板
+//        HttpRunnerRightPanel rightPanel = new HttpRunnerRightPanel(project, toolWindow);
+//        jbSplitter.setSecondComponent(rightPanel.getContainer());
+//        //设置面板的左右比例，这里是左侧占60%，右侧占40%
+//        jbSplitter.setProportion(0.6f);
+//        //将面板设置到自己的内容面板中
+//        setContent(jbSplitter);
 
-            JTextArea outputJta = new JTextArea(15,30);
-//            inputJta.setText("Please enter your sql.");
-            outputJta.setFont(new Font("微软雅黑", Font.PLAIN, 15));
-            panel.add(outputJta);
-
-            final Content content1 = factory.createContent(panel, null, false);
-            toolWindow.getContentManager().addContent(content1);
-
-            convertBtn.addActionListener(e -> {
-                String actionCommand = e.getActionCommand();
-                String sql = inputJta.getText();
-                if(StringUtils.isBlank(sql)) {
-                    outputJta.setText("Please enter your sql.");
-                }
-                SearchDao searchDao = MainTestSuite.getSearchDao();
-                try {
-                    QueryAction queryAction = searchDao.explain(sql);
-                    SqlElasticRequestBuilder requestBuilder = queryAction.explain();
-                    outputJta.setText(requestBuilder.explain());
-                } catch (SqlParseException ex) {
-                    throw new RuntimeException(ex);
-                } catch (SQLFeatureNotSupportedException ex) {
-                    throw new RuntimeException(ex);
-                }
-
-            });
-        }
-//        {
-//            JPanel panel = new JPanel();
-//            JLabel label = new JLabel("Hello world");
-//            label.setFont(new Font("宋体" , Font.BOLD , 32));
-//            label.setForeground(JBColor.RED);
-//            panel.add(label);
-//            final Content content1 = factory.createContent(panel, "world", true);
-//            toolWindow.getContentManager().addContent(content1);
-//        }
+        ConvertForm01 convertForm01 = new ConvertForm01(project, toolWindow);
+//        JPanel jPanel = new JPanel();
+//        jPanel.add(convertForm01.getjPanel());
+        setContent(convertForm01.getSqlToDslPanel());
     }
 }
+
