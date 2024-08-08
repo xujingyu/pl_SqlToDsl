@@ -43,13 +43,12 @@ public class ConvertForm01 {
                         QueryAction queryAction = searchDao.explain(sql);
                         SqlElasticRequestBuilder requestBuilder = queryAction.explain();
                         dslArea.setText(requestBuilder.explain());
-                    } catch (SqlParseException ex) {
-                        throw new RuntimeException(ex);
-                    } catch (SQLFeatureNotSupportedException ex) {
+                    } catch (Exception ex) {
+                        dslArea.setText("Unsupported query: " + sql);
                         throw new RuntimeException(ex);
                     }
                 } else {
-                    dslArea.setText("Please input sql");
+                    dslArea.setText("Please enter your SQL");
                 }
             }
         });

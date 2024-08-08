@@ -30,7 +30,7 @@
           <component id="5af34" class="javax.swing.JTextArea" binding="sqlArea">
             <constraints/>
             <properties>
-              <font name="Microsoft YaHei Light"/>
+              <font name="Microsoft YaHei" size="14" style="0"/>
               <lineWrap value="true"/>
               <margin top="20" left="20" bottom="20" right="20"/>
               <wrapStyleWord value="true"/>
