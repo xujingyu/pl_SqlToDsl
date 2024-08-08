@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.pharmcube.xjy"
-version = "1.1"
+version = "1.2.3"
 
 repositories {
     mavenCentral()
