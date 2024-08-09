@@ -4,15 +4,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.pharmcube.xjy.es4sql.MainTestSuite;
 import com.pharmcube.xjy.es4sql.SearchDao;
-import com.pharmcube.xjy.es4sql.exception.SqlParseException;
 import com.pharmcube.xjy.es4sql.query.QueryAction;
 import com.pharmcube.xjy.es4sql.query.SqlElasticRequestBuilder;
 import org.apache.commons.lang.StringUtils;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLFeatureNotSupportedException;
 
 
 public class ConvertForm01 {
@@ -26,13 +27,15 @@ public class ConvertForm01 {
     private JButton convertButtion;
     private JTextArea sqlArea;
     private JTextArea dslArea;
-    private JButton button2;
-    private JButton button3;
+    private JButton clearButton;
+    private JButton copyButton;
     private JScrollPane sqlPane;
     private JScrollPane dslPane;
 
     public ConvertForm01(Project project, ToolWindow toolWindow) {
         super();
+
+        // Convert按钮监听
         convertButtion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -49,6 +52,27 @@ public class ConvertForm01 {
                     }
                 } else {
                     dslArea.setText("Please enter your SQL");
+                }
+            }
+        });
+
+        // Clear按钮监听
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                        sqlArea.setText("");
+            }
+        });
+
+        // Copy按钮监听
+        copyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String dsl = dslArea.getText();
+                if(StringUtils.isNotBlank(dsl)) {
+                    StringSelection stringSelection = new StringSelection(dsl);
+                    Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                    systemClipboard.setContents(stringSelection, null);
                 }
             }
         });
