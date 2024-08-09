@@ -7,9 +7,9 @@ import com.pharmcube.xjy.es4sql.domain.Where.CONN;
 import com.pharmcube.xjy.es4sql.exception.SqlParseException;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.common.xcontent.LoggingDeprecationHandler;
-import org.elasticsearch.common.xcontent.NamedXContentRegistry;
-import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.common.xcontent.json.JsonXContent;
+import org.elasticsearch.xcontent.NamedXContentRegistry;
+import org.elasticsearch.xcontent.XContentParser;
+import org.elasticsearch.xcontent.json.JsonXContent;
 import org.elasticsearch.index.query.*;
 import org.elasticsearch.join.query.JoinQueryBuilders;
 

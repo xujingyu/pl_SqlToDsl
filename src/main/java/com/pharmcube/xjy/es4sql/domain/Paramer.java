@@ -9,7 +9,7 @@ import com.pharmcube.xjy.es4sql.Util;
 import com.pharmcube.xjy.es4sql.exception.SqlParseException;
 import org.elasticsearch.common.Strings;
 import org.elasticsearch.common.xcontent.LoggingDeprecationHandler;
-import org.elasticsearch.common.xcontent.ToXContent;
+import org.elasticsearch.xcontent.ToXContent;
 import org.elasticsearch.index.query.*;
 
 import java.util.HashMap;

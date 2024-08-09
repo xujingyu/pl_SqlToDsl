@@ -15,15 +15,14 @@ import com.pharmcube.xjy.parse.SubQueryExpression;
 import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.common.ParsingException;
 import org.elasticsearch.common.geo.GeoPoint;
-import org.elasticsearch.common.geo.builders.ShapeBuilder;
-import org.elasticsearch.common.geo.parsers.ShapeParser;
+
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.LoggingDeprecationHandler;
-import org.elasticsearch.common.xcontent.NamedXContentRegistry;
-import org.elasticsearch.common.xcontent.ToXContent;
-import org.elasticsearch.common.xcontent.XContentParser;
-import org.elasticsearch.common.xcontent.json.JsonXContent;
-import org.elasticsearch.index.query.*;
+import org.elasticsearch.geometry.Geometry;
+import org.elasticsearch.xcontent.NamedXContentRegistry;
+import org.elasticsearch.xcontent.ToXContent;
+import org.elasticsearch.xcontent.XContentParser;
+import org.elasticsearch.xcontent.json.JsonXContent;
 import org.elasticsearch.join.query.JoinQueryBuilders;
 import org.elasticsearch.script.Script;
 import org.elasticsearch.search.SearchModule;
@@ -31,7 +30,41 @@ import org.elasticsearch.search.SearchModule;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+
+
+import com.alibaba.druid.sql.ast.expr.SQLBooleanExpr;
+import com.alibaba.druid.sql.ast.expr.SQLCaseExpr;
+import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr;
+import com.alibaba.druid.sql.ast.expr.SQLNumericLiteralExpr;
+
+import org.elasticsearch.common.geo.GeometryParserFormat;
+
+import org.elasticsearch.geometry.utils.StandardValidator;
+
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.GeoPolygonQueryBuilder;
+import org.elasticsearch.index.query.MatchPhrasePrefixQueryBuilder;
+import org.elasticsearch.index.query.MatchPhraseQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
+import org.elasticsearch.index.query.MultiMatchQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryStringQueryBuilder;
+import org.elasticsearch.index.query.RegexpFlag;
+import org.elasticsearch.index.query.RegexpQueryBuilder;
+import org.elasticsearch.index.query.SpanNearQueryBuilder;
+import org.elasticsearch.index.query.SpanQueryBuilder;
+import org.elasticsearch.index.query.WildcardQueryBuilder;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public abstract class Maker {
 
@@ -266,9 +299,11 @@ public abstract class Maker {
             case GEO_INTERSECTS:
                 String wkt = cond.getValue().toString();
                 try {
-                    ShapeBuilder shapeBuilder = getShapeBuilderFromString(wkt);
-                    x = QueryBuilders.geoShapeQuery(cond.getName(), shapeBuilder);
-                } catch (IOException e) {
+//                    ShapeBuilder shapeBuilder = getShapeBuilderFromString(wkt);
+//                    x = QueryBuilders.geoShapeQuery(cond.getName(), shapeBuilder);
+                    Geometry geometry = getGeometryFromString(wkt);
+                    x = QueryBuilders.geoIntersectionQuery(cond.getName(), geometry);
+                } catch (IOException | ParseException e) {
                     e.printStackTrace();
                     throw new SqlParseException("couldn't create shapeBuilder from wkt: " + wkt);
                 }
@@ -368,12 +403,27 @@ public abstract class Maker {
         return strings;
     }
 
-    private ShapeBuilder getShapeBuilderFromString(String str) throws IOException {
+//    private ShapeBuilder getShapeBuilderFromString(String str) throws IOException {
+//        String json;
+//        if(str.contains("{")) json  = fixJsonFromElastic(str);
+//        else json = WktToGeoJsonConverter.toGeoJson(trimApostrophes(str));
+//
+//        return getShapeBuilderFromJson(json);
+//    }
+
+    private Geometry getGeometryFromString(String str) throws IOException, ParseException {
         String json;
         if(str.contains("{")) json  = fixJsonFromElastic(str);
         else json = WktToGeoJsonConverter.toGeoJson(trimApostrophes(str));
 
-        return getShapeBuilderFromJson(json);
+        return getGeometryFromJson(json);
+    }
+
+    private Geometry getGeometryFromJson(String json) throws IOException, ParseException {
+        try (XContentParser parser = JsonXContent.jsonXContent.createParser(NamedXContentRegistry.EMPTY, LoggingDeprecationHandler.INSTANCE, json)) {
+            parser.nextToken();
+            return GeometryParserFormat.GEOJSON.fromXContent(StandardValidator.instance(true), true, true, parser);
+        }
     }
 
     /*
@@ -387,12 +437,12 @@ public abstract class Maker {
         return properJson;
     }
 
-    private ShapeBuilder getShapeBuilderFromJson(String json) throws IOException {
-        try (XContentParser parser = JsonXContent.jsonXContent.createParser(NamedXContentRegistry.EMPTY, LoggingDeprecationHandler.INSTANCE, json)) {
-            parser.nextToken();
-            return ShapeParser.parse(parser);
-        }
-    }
+//    private ShapeBuilder getShapeBuilderFromJson(String json) throws IOException {
+//        try (XContentParser parser = JsonXContent.jsonXContent.createParser(NamedXContentRegistry.EMPTY, LoggingDeprecationHandler.INSTANCE, json)) {
+//            parser.nextToken();
+//            return ShapeParser.parse(parser);
+//        }
+//    }
 
     private String trimApostrophes(String str) {
         return str.substring(1, str.length()-1);
