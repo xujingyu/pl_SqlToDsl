@@ -30,7 +30,8 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-<!--        <toolWindow id="SqlToDsl" anchor="right" factoryClass="com.pharmcube.xjy.pl_sqltodsl.SqlToDslRightToolWindow" icon="AllIcons.Actions.Colors"/>-->
-        <toolWindow id="SqlToDsl" anchor="right" factoryClass="com.pharmcube.xjy.pl_sqltodsl.SqlToDslRightToolWindowFactory" icon="com.pharmcube.xjy.pl_sqltodsl.MyIcons.Action"/>
+        <toolWindow id="SqlToDsl" anchor="right"
+                    factoryClass="com.pharmcube.xjy.pl_sqltodsl.SqlToDslRightToolWindowFactory"
+                    icon="com.pharmcube.xjy.pl_sqltodsl.MyIcons.Action"/>
     </extensions>
 </idea-plugin>
