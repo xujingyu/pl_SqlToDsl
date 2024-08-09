@@ -33,6 +33,7 @@
               <font name="Microsoft YaHei" size="14" style="0"/>
               <lineWrap value="true"/>
               <margin top="20" left="20" bottom="20" right="20"/>
+              <text value="select meeting_category,count(*) from meeting_paper group by meeting_category limit 11"/>
               <wrapStyleWord value="true"/>
             </properties>
           </component>
